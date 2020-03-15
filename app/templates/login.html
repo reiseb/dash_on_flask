@@ -1,22 +1,31 @@
 {% extends "base.html" %}
+{% set active_page = "login" %}
+
+{% block title %}
+    Login
+{% endblock %}
 
 {% block content %}
-<h1>Sign In</h1>
-<form action="" method="post" novalidate>
-  {{ form.hidden_tag() }}
-  <p>
-    {{ form.username.label }}<br>
-    {{ form.username(size=32) }}<br>
-  </p>
-  <p>
-    {{ form.password.label }}<br>
-    {{ form.password(size=32) }}<br>
-  </p>
-  <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
-  <p>{{ form.submit() }}</p>
-  {% if error %}
-  <p class="error"><strong>Error:</strong> {{ error }}
-    {% endif %}
-</form>
-<p> New User? <a href="{{ url_for('main.register') }}">Click to Register!</a></p>
+<div class="login">
+    <div class="login-screen">
+        <div class="app-title">
+            <h1 class="mb-4">Login</h1>
+        </div>
+        <form action="" method="POST">
+            <div class="login-form">
+                {{ form.hidden_tag() }}
+                <div class="control-group">
+                    <p>{{ form.username() }}</p>
+                </div>
+                <div class="control-group">
+                    <p>{{ form.password() }}</p>
+                </div>
+                <p>{{ form.submit(class="btn btn-primary btn-large") }}</p>
+                {% if error %}
+                    <p class="error">{{ error }} </p>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}
