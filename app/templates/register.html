@@ -1,17 +1,35 @@
 {% extends "base.html" %}
+{% set active_page = "register" %}
+
+{% block title %}
+    Register
+{% endblock %}
 
 {% block content %}
-    <h1>Register</h1>
-    <form action="" method="post">
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.username.label }}<br>
-            {{ form.username(size=32) }}<br>
-        </p>
-        <p>
-            {{ form.password.label }}<br>
-            {{ form.password(size=32) }}<br>
-        </p>
-        <p>{{ form.submit() }}</p>
-    </form>
+{% if current_user.is_authenticated and current_user.username == 'admin' %}
+    <div class="login">
+        <div class="login-screen">
+            <div class="app-title">
+                <h1 class="mb-4">Register</h1>
+            </div>
+            <form action="" method="post">
+                <div class="login-form">
+                    {{ form.hidden_tag() }}
+                    <div class="control-group">
+                        <p>{{ form.username() }}</p>
+                    </div>
+                    <div class="control-group">
+                        <p>{{ form.password() }}</p>
+                    </div>
+                    <p>{{ form.submit(class="btn btn-primary btn-large") }}</p>
+                    {% if error %}
+                        <p class="error">{{ error }} </p>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+{% else %}
+    <h1 class="my-5">You need to be admin to register new users!</h1>
+{% endif %}
 {% endblock %}
