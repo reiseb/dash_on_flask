@@ -1,6 +1,4 @@
-import dash
 from flask import Flask
-from flask.helpers import get_root_path
 from flask_login import login_required
 from dotenv import load_dotenv
 
@@ -20,24 +18,11 @@ def create_app():
 
 
 def register_dashapps(app):
-    from app.dashapp1.layout import layout
-    from app.dashapp1.callbacks import register_callbacks
+    from app.dashapps.dummy_app import create_app as create_dummy_app
 
-    # Meta tags for viewport responsiveness
-    meta_viewport = {"name": "viewport", "content": "width=device-width, initial-scale=1, shrink-to-fit=no"}
+    dummy_app = create_dummy_app(app)
 
-    dashapp1 = dash.Dash(__name__,
-                         server=app,
-                         url_base_pathname='/dashboard/',
-                         assets_folder=get_root_path(__name__) + '/dashboard/assets/',
-                         meta_tags=[meta_viewport])
-
-    with app.app_context():
-        dashapp1.title = 'Dashapp 1'
-        dashapp1.layout = layout
-        register_callbacks(dashapp1)
-
-    _protect_dashviews(dashapp1)
+    _protect_dashviews(dummy_app)
 
 
 def _protect_dashviews(dashapp):
