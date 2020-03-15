@@ -1,12 +1,53 @@
-<div>
-  Test:
-  <a href="{{ url_for('main.index') }}">Home</a>
-  {% if current_user.is_anonymous %}
-  <a href="{{ url_for('main.login') }}">Login</a>
-  {% else %}
-  <a href="{{ url_for('main.logout') }}">Logout</a>
-  {% endif %}
+<link rel="stylesheet" href="/static/bootstrap.css" type="text/css">
+<link rel="stylesheet" href="/static/style.css" type="text/css">
+<link rel="stylesheet" href="/static/login_form.css" type="text/css">
+<link rel="stylesheet" href="/static/navbar.css" type="text/css">
 
-  {% block content %}
-  {% endblock %}
+{% if current_user.is_anonymous %}
+    {% set navigation_bar = [
+            (url_for('main.index'), 'home', 'Home'),
+            (url_for('main.login'), 'login', 'Login'),
+        ] 
+    -%}
+{% elif current_user.username == 'admin' %}
+    {% set navigation_bar = [
+            (url_for('main.index'), 'home', 'Home'),
+            (url_for('main.register'), 'register', 'Register'),
+            (url_for('main.logout'), 'logout', 'Logout')
+        ] 
+    -%}
+{% else %}
+    {% set navigation_bar = [
+            (url_for('main.index'), 'home', 'Home'),
+            (url_for('main.logout'), 'logout', 'Logout')
+        ] 
+    -%}
+{% endif %}
+
+{% set active_page = active_page|default('home') -%}
+
+<title>{% block title %}{% endblock %}</title>
+
+<div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="#">
+        </a>
+        <input type="checkbox" id="navbar-toggle-cbox">
+        <label for="navbar-toggle-cbox" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="navbar-toggler-icon"></span>
+        </label>
+        <div class="collapse navbar-collapse" id="navbar" style="">
+            <ul class="navbar-nav mr-auto">
+                {% for href, id, caption in navigation_bar %}
+                    <li {% if id==active_page %} class="nav-item active" {% else %} class="nav-item" {% endif %}>
+                        <a class="nav-link" href="{{ href|e }}">{{ caption|e }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
 </div>
