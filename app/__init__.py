@@ -2,11 +2,13 @@ import dash
 from flask import Flask
 from flask.helpers import get_root_path
 from flask_login import login_required
+from dotenv import load_dotenv
 
 from config import BaseConfig
 
 
 def create_app():
+    load_dotenv(verbose=True)
     server = Flask(__name__)
     server.config.from_object(BaseConfig)
 
@@ -41,7 +43,8 @@ def register_dashapps(app):
 def _protect_dashviews(dashapp):
     for view_func in dashapp.server.view_functions:
         if view_func.startswith(dashapp.config.url_base_pathname):
-            dashapp.server.view_functions[view_func] = login_required(dashapp.server.view_functions[view_func])
+            dashapp.server.view_functions[view_func] = login_required(
+                dashapp.server.view_functions[view_func])
 
 
 def register_extensions(server):
